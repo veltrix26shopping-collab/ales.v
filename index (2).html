@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALES.V | Consultoría de Gestión & Marketing Digital</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Three.js for 3D Panoramic Motion Logo -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            rose: '#FCE7F3',
+                            roseDark: '#F472B6',
+                            blush: '#FFF1F2',
+                            lavender: '#EDE9FE',
+                            purple: '#A78BFA',
+                            mint: '#D1FAE5',
+                            cream: '#FAF5FF',
+                            gold: '#EAB308',
+                            roseGold: '#E0A96D',
+                            textDark: '#374151',
+                            heading: '#1F2937'
+                        }
+                    },
+                    keyframes: {
+                        floatSlow: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(2deg)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        }
+                    },
+                    animation: {
+                        'float-slow': 'floatSlow 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 3s infinite linear'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF5FF;
+            color: #374151;
+        }
+        .pastel-glass {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(244, 114, 182, 0.25);
+        }
+        .pastel-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(233, 213, 255, 0.7);
+            box-shadow: 0 10px 30px -10px rgba(244, 114, 182, 0.12);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .pastel-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(244, 114, 182, 0.5);
+            box-shadow: 0 20px 40px -12px rgba(167, 139, 250, 0.22);
+        }
+        .rose-gold-gradient {
+            background: linear-gradient(135deg, #F472B6 0%, #A78BFA 50%, #E0A96D 100%);
+        }
+        .rose-gold-text {
+            background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #D97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .tab-btn.active {
+            background: white;
+            color: #DB2777;
+            box-shadow: 0 4px 14px rgba(219, 39, 119, 0.15);
+            border-color: #F472B6;
+        }
+        /* Style for smooth image loading overlay */
+        .img-overlay-pastel {
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(253, 242, 248, 0.85) 100%);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden font-sans selection:bg-pink-200 selection:text-pink-900">
+
+    <!-- Floating Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 pastel-glass rounded-b-3xl px-6 my-2 shadow-sm">
+                
+                <!-- Panoramic 3D Interactive Logo Header -->
+                <a href="#inicio" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-2xl relative overflow-hidden bg-gradient-to-tr from-pink-200 via-purple-200 to-amber-100 flex items-center justify-center shadow-md border border-pink-300/50">
+                        <canvas id="logo-3d-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-serif font-extrabold text-2xl tracking-wide rose-gold-text flex items-center gap-1.5">
+                            ALES.V
+                            <span class="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
+                        </span>
+                        <span class="text-[10px] text-pink-600 font-semibold tracking-widest uppercase">Consultoría de Gestión</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-7 text-sm font-medium text-slate-700">
+                    <a href="#inicio" class="hover:text-pink-600 transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-pink-400 after:absolute after:bottom-0 after:left-0 after:transition-all">Inicio</a>
+                    <a href="#nosotros" class="hover:text-pink-600 transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-pink-400 after:absolute after:bottom-0 after:left-0 after:transition-all">Quiénes Somos</a>
+                    <a href="#servicios" class="hover:text-pink-600 transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-pink-400 after:absolute after:bottom-0 after:left-0 after:transition-all">Servicios</a>
+                    <a href="#elegirnos" class="hover:text-pink-600 transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-pink-400 after:absolute after:bottom-0 after:left-0 after:transition-all">Por Qué ALES.V</a>
+                    <a href="#calculadora" class="hover:text-pink-600 transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-pink-400 after:absolute after:bottom-0 after:left-0 after:transition-all">Calculadora ROI</a>
+                    <a href="#precios" class="hover:text-pink-600 transition-colors py-1 relative hover:after:w-full after:w-0 after:h-0.5 after:bg-pink-400 after:absolute after:bottom-0 after:left-0 after:transition-all">Planes</a>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="hidden md:flex items-center gap-3">
+                    <button id="open-presentation-btn" class="px-4 py-2.5 rounded-2xl bg-purple-100 hover:bg-purple-200 text-purple-800 text-xs font-bold transition-all flex items-center gap-1.5 border border-purple-200">
+                        <i data-lucide="play-circle" class="w-4 h-4 text-purple-600"></i> Presentación Viva
+                    </button>
+                    <a href="#contacto" class="px-5 py-2.5 rounded-2xl rose-gold-gradient text-white text-xs font-bold shadow-md shadow-pink-300/50 hover:shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i> Agendar Cita
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-pink-600 hover:bg-pink-100/50" aria-label="Abrir Menú">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden max-w-7xl mx-auto px-4 mt-2">
+            <div class="pastel-glass rounded-3xl p-6 flex flex-col space-y-4 shadow-xl border border-pink-200">
+                <a href="#inicio" class="mobile-link text-slate-700 font-semibold text-lg hover:text-pink-600">Inicio</a>
+                <a href="#nosotros" class="mobile-link text-slate-700 font-semibold text-lg hover:text-pink-600">Quiénes Somos</a>
+                <a href="#servicios" class="mobile-link text-slate-700 font-semibold text-lg hover:text-pink-600">Servicios</a>
+                <a href="#elegirnos" class="mobile-link text-slate-700 font-semibold text-lg hover:text-pink-600">Por Qué ALES.V</a>
+                <a href="#calculadora" class="mobile-link text-slate-700 font-semibold text-lg hover:text-pink-600">Calculadora ROI</a>
+                <a href="#precios" class="mobile-link text-slate-700 font-semibold text-lg hover:text-pink-600">Planes</a>
+                <button id="open-presentation-mobile" class="w-full py-3 bg-purple-100 text-purple-800 rounded-2xl font-bold text-sm">Ver Presentación Viva</button>
+                <a href="#contacto" class="mobile-link text-center w-full py-3 rose-gold-gradient text-white rounded-2xl font-bold shadow-md">Agendar Cita</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with High-Res Pastel Unsplash Background & Image Card -->
+    <section id="inicio" class="relative pt-36 pb-20 md:pt-44 md:pb-28 overflow-hidden min-h-screen flex items-center">
+        <!-- Floating Pastel Glow Background Blobs -->
+        <div class="absolute top-20 left-10 w-96 h-96 bg-pink-200/60 rounded-full blur-3xl pointer-events-none animate-float-slow"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-purple-200/60 rounded-full blur-3xl pointer-events-none animate-float-slow" style="animation-delay: -3s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-100/50 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Main Copy -->
+                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-pink-300 text-xs font-bold text-pink-600 shadow-sm animate-bounce">
+                        <i data-lucide="heart" class="w-3.5 h-3.5 fill-pink-400 text-pink-400"></i>
+                        Consultoría B2B Estratégica & Creativa
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl lg:text-6xl font-serif font-extrabold text-slate-800 leading-[1.15]">
+                        Transformamos la Gestión de tu Empresa en una <br class="hidden sm:inline"/>
+                        <span class="rose-gold-text italic font-serif">Inversión Elegante y Rentable</span>
+                    </h1>
+
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal">
+                        Ayudamos a PyMEs, emprendedoras y comercios a estructurar sus finanzas, automatizar sus procesos organizativos y escalar con estrategias de marketing digital de alto rendimiento.
+                    </p>
+
+                    <!-- Interactive CTAs -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="#contacto" class="w-full sm:w-auto px-8 py-4 rounded-2xl rose-gold-gradient text-white font-bold text-sm shadow-xl shadow-pink-200 hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center gap-2">
+                            <span>Agendar Sesión de Valor</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                        <button id="hero-presentation-btn" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white border border-pink-200 text-pink-600 font-bold text-sm shadow-sm hover:bg-pink-50 hover:scale-105 transition-all text-center flex items-center justify-center gap-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                            <span>Ver Presentación Interactiva</span>
+                        </button>
+                    </div>
+
+                    <!-- Trust Stats -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-pink-200/60 max-w-lg mx-auto lg:mx-0">
+                        <div>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-pink-600 font-serif">+95%</p>
+                            <p class="text-xs text-slate-500 mt-0.5 font-medium">Eficiencia Organizativa</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-purple-600 font-serif">3.8x</p>
+                            <p class="text-xs text-slate-500 mt-0.5 font-medium">Retorno Estimado</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-amber-600 font-serif">100%</p>
+                            <p class="text-xs text-slate-500 mt-0.5 font-medium">Atención Personalizada</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Unsplash Real Image Card with Interactive Overlay Badge -->
+                <div class="lg:col-span-5">
+                    <div class="relative pastel-card rounded-3xl p-4 sm:p-5 border-2 border-white shadow-2xl bg-gradient-to-b from-white/95 to-pink-50/70 group">
+                        
+                        <!-- Image Container with Pastel Gradient Blend -->
+                        <div class="relative h-80 sm:h-96 rounded-2xl overflow-hidden shadow-md">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=80" 
+                                 alt="Consultoría Femenina ALES.V" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                 onerror="this.src='https://placehold.co/800x1000/fce7f3/db2777?text=ALES.V+Consultoria'" />
+                            
+                            <div class="absolute inset-0 img-overlay-pastel flex flex-col justify-end p-6">
+                                <div class="bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-pink-200 shadow-lg space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-pink-600 uppercase tracking-wider">Estrategia B2B</span>
+                                        <span class="flex h-2 w-2 relative">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+                                        </span>
+                                    </div>
+                                    <h4 class="font-serif font-bold text-slate-800 text-base">Liderazgo & Consultoría Activa</h4>
+                                    <p class="text-[11px] text-slate-600">Transformación transparente de PyMEs con enfoque pastel sofisticado.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orbiting Badges -->
+                        <div class="absolute -top-3 -left-3 bg-white/95 shadow-md px-3.5 py-2 rounded-2xl border border-pink-200 text-xs font-bold text-pink-600 flex items-center gap-2 animate-float-slow">
+                            <i data-lucide="trending-up" class="w-4 h-4 text-pink-500"></i> Finanzas Claras
+                        </div>
+                        <div class="absolute -bottom-3 -right-3 bg-white/95 shadow-md px-3.5 py-2 rounded-2xl border border-purple-200 text-xs font-bold text-purple-600 flex items-center gap-2 animate-float-slow" style="animation-delay: -2s;">
+                            <i data-lucide="target" class="w-4 h-4 text-purple-500"></i> Marketing Digital
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiénes Somos Section with Unsplash Image -->
+    <section id="nosotros" class="py-24 relative bg-gradient-to-b from-transparent via-purple-50/50 to-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-pink-600 bg-pink-100 px-3.5 py-1.5 rounded-full border border-pink-200">
+                        Nuestra Esencia & Visión
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-serif font-extrabold text-slate-800">
+                        ¿Quiénes Somos en ALES.V?
+                    </h2>
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+                        Somos una firma de consultoría estratégica y marketing digital B2B diseñada para transformar la percepción del asesoramiento de negocios: dejamos atrás los costos fríos para ofrecer una inversión cercana, analítica y llena de valor.
+                    </p>
+                    <div class="p-4 bg-white/80 rounded-2xl border border-purple-200 flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=200&q=80" 
+                             alt="Fundadora ALES.V" 
+                             class="w-14 h-14 rounded-full object-cover border-2 border-pink-300 shrink-0" 
+                             onerror="this.src='https://placehold.co/200x200/fce7f3/db2777?text=CEO'"/>
+                        <div>
+                            <h4 class="font-serif font-bold text-slate-800 text-sm">Dirección Ejecutiva Empática</h4>
+                            <p class="text-xs text-slate-500">"Acompañamos a las PyMEs a dar el salto hacia estructuras sólidas y rentables."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6">
+                    <div class="relative pastel-card rounded-3xl p-3 border-2 border-white shadow-xl overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1000&q=80" 
+                             alt="Equipo ALES.V Consultoras" 
+                             class="w-full h-80 object-cover rounded-2xl"
+                             onerror="this.src='https://placehold.co/800x600/ede9fe/8b5cf6?text=Equipo+ALES.V'"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Cards (Pastel Tone Grid) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Card 1: Misión -->
+                <div class="pastel-card p-8 rounded-3xl bg-pink-50/70 border-pink-200/80 space-y-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 rounded-2xl bg-pink-200 text-pink-700 flex items-center justify-center font-bold text-2xl">
+                        <i data-lucide="compass" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-slate-800">Nuestra Misión</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Guiar a pequeñas y medianas empresas, emprendedoras y profesionales a identificar cuellos de botella, optimizar sus recursos y tomar decisiones inteligentes que impulsen un crecimiento real.
+                    </p>
+                </div>
+
+                <!-- Card 2: Visión -->
+                <div class="pastel-card p-8 rounded-3xl bg-purple-50/70 border-purple-200/80 space-y-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-200 text-purple-700 flex items-center justify-center font-bold text-2xl">
+                        <i data-lucide="award" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-slate-800">Nuestra Visión</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Ser el aliado consultor B2B de referencia en Latinoamérica, reconocido por elevar negocios mediante procesos ordenados, presupuestos sanos y estrategias digitales de alto impacto.
+                    </p>
+                </div>
+
+                <!-- Card 3: Enfoque B2B -->
+                <div class="pastel-card p-8 rounded-3xl bg-amber-50/70 border-amber-200/80 space-y-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-200 text-amber-700 flex items-center justify-center font-bold text-2xl">
+                        <i data-lucide="users" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-slate-800">Modelo B2B Humano</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Nos integramos mano a mano con los dueños de negocios y sus equipos. No entregamos reportes estáticos: ejecutamos y acompañamos cada etapa del cambio estratégico.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios Section with Unsplash Images in Cards -->
+    <section id="servicios" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-widest text-purple-600 bg-purple-100 px-3 py-1 rounded-full border border-purple-200">
+                    Portafolio de Soluciones
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-extrabold text-slate-800 mt-3">
+                    Nuestros Servicios Especializados
+                </h2>
+                <p class="text-slate-600 mt-4 text-base sm:text-lg">
+                    Haz clic en cualquiera de nuestras consultorías para desplegar los detalles técnicos de ejecución.
+                </p>
+            </div>
+
+            <!-- Expandable Service Cards Grid with Unsplash Images -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Service 1: Consultoría Administrativa -->
+                <div class="pastel-card rounded-3xl overflow-hidden border border-pink-200 flex flex-col justify-between group cursor-pointer service-card" data-service="1">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Consultoría Administrativa" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://placehold.co/600x400/fce7f3/db2777?text=Administrativa'"/>
+                            <div class="absolute inset-0 bg-pink-900/10"></div>
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-pink-600">
+                                Organización
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold text-slate-800 mb-2">Consultoría Administrativa</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-2">
+                                Estructuración de roles, normas internas y organización funcional para empresas en desarrollo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <div class="service-details hidden border-t border-pink-100 pt-3 text-xs text-slate-600 space-y-2">
+                            <p class="font-bold text-pink-600">Lo que incluye:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Manuales de organización y funciones.</li>
+                                <li>Diseño e implementación de organigramas.</li>
+                                <li>Gestión del tiempo y flujos directivos.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-3 flex items-center justify-between text-xs font-bold text-pink-600">
+                            <span class="toggle-text">Ver detalles de la consultoría</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform icon-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 2: Planificación Estratégica -->
+                <div class="pastel-card rounded-3xl overflow-hidden border border-purple-200 flex flex-col justify-between group cursor-pointer service-card" data-service="2">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Planificación Estratégica" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://placehold.co/600x400/ede9fe/8b5cf6?text=Estrategia'"/>
+                            <div class="absolute inset-0 bg-purple-900/10"></div>
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-purple-600">
+                                Visión Futuro
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold text-slate-800 mb-2">Planificación Estratégica</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-2">
+                                Construcción de tableros de control (OKRs/KPIs) e itinerarios claros de crecimiento a corto y mediano plazo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <div class="service-details hidden border-t border-purple-100 pt-3 text-xs text-slate-600 space-y-2">
+                            <p class="font-bold text-purple-600">Lo que incluye:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Definición de objetivos SMART corporativos.</li>
+                                <li>Análisis FODA y mapa de riesgos de mercado.</li>
+                                <li>Tablero de mando integral para seguimiento.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-3 flex items-center justify-between text-xs font-bold text-purple-600">
+                            <span class="toggle-text">Ver detalles de la consultoría</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform icon-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 3: Gestión y Mejora de Procesos -->
+                <div class="pastel-card rounded-3xl overflow-hidden border border-emerald-200 flex flex-col justify-between group cursor-pointer service-card" data-service="3">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Gestión de Procesos" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://placehold.co/600x400/d1fae5/059669?text=Procesos'"/>
+                            <div class="absolute inset-0 bg-emerald-900/10"></div>
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-600">
+                                Eficiencia
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold text-slate-800 mb-2">Gestión y Mejora de Procesos</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-2">
+                                Mapeo integral de operaciones (BPM) para eliminar tareas repetitivas y reducir costos operativos.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <div class="service-details hidden border-t border-emerald-100 pt-3 text-xs text-slate-600 space-y-2">
+                            <p class="font-bold text-emerald-600">Lo que incluye:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Diagramas de flujo de trabajo actual vs. deseado.</li>
+                                <li>Automatización con herramientas digitales nativas.</li>
+                                <li>Ahorro cuantificable de tiempo hombre/hora.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-3 flex items-center justify-between text-xs font-bold text-emerald-600">
+                            <span class="toggle-text">Ver detalles de la consultoría</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform icon-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 4: Asesoría Financiera -->
+                <div class="pastel-card rounded-3xl overflow-hidden border border-amber-200 flex flex-col justify-between group cursor-pointer service-card" data-service="4">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Asesoría Financiera" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://placehold.co/600x400/fef3c7/d97706?text=Finanzas'"/>
+                            <div class="absolute inset-0 bg-amber-900/10"></div>
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-amber-600">
+                                Rentabilidad
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold text-slate-800 mb-2">Asesoría Financiera</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-2">
+                                Ordenamiento de caja, estructura de costos y estrategias para proteger y maximizar el margen de ganancia.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <div class="service-details hidden border-t border-amber-100 pt-3 text-xs text-slate-600 space-y-2">
+                            <p class="font-bold text-amber-600">Lo que incluye:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Presupuesto maestro y control de flujo de caja.</li>
+                                <li>Análisis de precios y márgenes de utilidad.</li>
+                                <li>Planes de contingencia y rentabilidad B2B.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-3 flex items-center justify-between text-xs font-bold text-amber-600">
+                            <span class="toggle-text">Ver detalles de la consultoría</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform icon-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 5: Marketing y Comercial (Highlighted) -->
+                <div class="pastel-card rounded-3xl overflow-hidden border-2 border-pink-400 bg-pink-50/40 flex flex-col justify-between group cursor-pointer service-card relative shadow-md" data-service="5">
+                    <span class="absolute top-3 right-3 z-10 text-[10px] uppercase font-extrabold bg-pink-500 text-white px-2.5 py-1 rounded-full shadow-sm">Estrella</span>
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Marketing Digital B2B" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://placehold.co/600x400/fce7f3/ec4899?text=Marketing+Digital'"/>
+                            <div class="absolute inset-0 bg-pink-900/10"></div>
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-pink-700">
+                                Ventas B2B
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold text-slate-800 mb-2">Consultoría Comercial & Marketing</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-2">
+                                Estrategias de posicionamiento, generación de prospectos calificados y embudos de venta B2B.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <div class="service-details hidden border-t border-pink-200 pt-3 text-xs text-slate-600 space-y-2">
+                            <p class="font-bold text-pink-700">Lo que incluye:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Diseño de embudo de ventas comercial.</li>
+                                <li>Estrategia publicitaria digital (Meta/Google Ads).</li>
+                                <li>Guion e incentivos para equipos de ventas.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-3 flex items-center justify-between text-xs font-bold text-pink-700">
+                            <span class="toggle-text">Ver detalles de la consultoría</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform icon-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 6: Capacitación Empresarial -->
+                <div class="pastel-card rounded-3xl overflow-hidden border border-blue-200 flex flex-col justify-between group cursor-pointer service-card" data-service="6">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80" 
+                                 alt="Capacitación Empresarial" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 onerror="this.src='https://placehold.co/600x400/dbeafe/2563eb?text=Capacitacion'"/>
+                            <div class="absolute inset-0 bg-blue-900/10"></div>
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-blue-600">
+                                Habilidades
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold text-slate-800 mb-2">Capacitación Empresarial</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-2">
+                                Talleres in-company para desarrollo de habilidades directivas, atención al cliente y liderazgo empático.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <div class="service-details hidden border-t border-blue-100 pt-3 text-xs text-slate-600 space-y-2">
+                            <p class="font-bold text-blue-600">Lo que incluye:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Formación directiva en gestión de personas.</li>
+                                <li>Talleres de servicio al cliente memorable.</li>
+                                <li>Entrenamiento de liderazgo para PyMEs.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-3 flex items-center justify-between text-xs font-bold text-blue-600">
+                            <span class="toggle-text">Ver detalles de la consultoría</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform icon-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive ROI Calculator Section -->
+    <section id="calculadora" class="py-24 relative bg-gradient-to-tr from-pink-100/50 via-purple-100/30 to-amber-100/50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="pastel-card p-8 sm:p-12 rounded-3xl border-2 border-white shadow-xl bg-white/90 relative">
+                
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="text-xs font-bold uppercase tracking-widest text-pink-600 bg-pink-100 px-3 py-1 rounded-full border border-pink-200">
+                        Herramienta Interactiva
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-serif font-extrabold text-slate-800 mt-3">Calculadora de Ahorro y ROI</h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-2">Mueve los controles para estimar la optimización proyectada en tu PyME con la consultoría ALES.V.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    
+                    <!-- Sliders & Controls -->
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <label class="text-slate-700 font-bold">Ventas Mensuales Actuales (USD):</label>
+                                <span id="calc-sales-text" class="font-bold text-pink-600">$12,000</span>
+                            </div>
+                            <input type="range" id="calc-sales" min="2000" max="80000" step="1000" value="12000" class="w-full accent-pink-500 cursor-pointer h-2 bg-pink-100 rounded-lg">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <label class="text-slate-700 font-bold">Integrantes del Equipo:</label>
+                                <span id="calc-team-text" class="font-bold text-purple-600">6 Personas</span>
+                            </div>
+                            <input type="range" id="calc-team" min="1" max="40" step="1" value="6" class="w-full accent-purple-500 cursor-pointer h-2 bg-purple-100 rounded-lg">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Área de Prioridad Máxima:</label>
+                            <select id="calc-focus" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-slate-700 text-sm font-medium focus:outline-none focus:border-pink-400">
+                                <option value="1.25">Aumento de Ventas & Marketing Digital (+25%)</option>
+                                <option value="1.18">Optimización de Gastos & Procesos (+18%)</option>
+                                <option value="1.30">Gestión Integral 360° (+30%)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Calculated Output Display Card -->
+                    <div class="pastel-card p-6 sm:p-8 rounded-2xl border border-pink-200 bg-gradient-to-br from-pink-50 to-purple-50 text-center space-y-6">
+                        <div>
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Impacto Anual Estimado</span>
+                            <div id="calc-result" class="text-4xl sm:text-5xl font-serif font-extrabold rose-gold-text mt-2">
+                                $18,000
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-pink-200/60 text-left">
+                            <div>
+                                <span class="text-[11px] text-slate-500 block font-medium">Horas/Mes Liberadas:</span>
+                                <span id="calc-hours" class="text-base font-bold text-slate-800">36 Horas</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] text-slate-500 block font-medium">Retorno Estimado:</span>
+                                <span id="calc-roi" class="text-base font-bold text-emerald-600">3.8x ROI</span>
+                            </div>
+                        </div>
+
+                        <a href="#contacto" class="block w-full py-3.5 rounded-2xl rose-gold-gradient text-white font-bold text-sm shadow-md hover:scale-105 transition-all text-center">
+                            Solicitar Diagnóstico para esta Proyección
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="precios" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-pink-600 bg-pink-100 px-3 py-1 rounded-full border border-pink-200">
+                    Planes Transparentes
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-extrabold text-slate-800 mt-3">
+                    Inversión Mensual o Anual
+                </h2>
+                <p class="text-slate-600 mt-4 text-base sm:text-lg">
+                    Elige el acompañamiento que tu empresa necesita para su etapa actual.
+                </p>
+
+                <!-- Billing Switch Toggle -->
+                <div class="flex items-center justify-center gap-4 mt-8">
+                    <span id="label-monthly" class="text-sm font-bold text-slate-800">Pago Mensual</span>
+                    <button id="plan-switch" class="w-16 h-9 bg-pink-200 rounded-full p-1 transition-colors relative focus:outline-none" aria-label="Cambiar modalidad de pago">
+                        <div id="switch-dot" class="w-7 h-7 bg-white rounded-full transition-transform transform translate-x-0 shadow-md"></div>
+                    </button>
+                    <span id="label-annual" class="text-sm font-semibold text-slate-500 flex items-center gap-2">
+                        Pago Anual 
+                        <span class="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase shadow-sm">Ahorra 20%</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Pricing Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                
+                <!-- Plan 1: Inicial -->
+                <div class="pastel-card rounded-3xl p-8 flex flex-col justify-between border border-pink-200">
+                    <div>
+                        <span class="text-xs font-bold text-pink-600 uppercase tracking-widest">Plan Inicial</span>
+                        <h3 class="text-2xl font-serif font-bold text-slate-800 mt-1">Emprendedora / PyME</h3>
+                        <p class="text-slate-500 text-xs mt-2">Ideal para estructurar administración y bases comerciales.</p>
+
+                        <div class="my-6">
+                            <span class="price-amount text-4xl font-extrabold text-slate-800 font-serif" data-monthly="290" data-annual="232">$290</span>
+                            <span class="text-slate-500 text-sm font-medium">/ mes</span>
+                        </div>
+
+                        <ul class="space-y-3 text-xs font-medium text-slate-600 border-t border-pink-100 pt-6">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500"></i> Diagnóstico Administrativo General</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500"></i> 2 Sesiones de Asesoría Mensual</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500"></i> Plan Estratégico de Marketing Digital</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500"></i> Revisión de Flujo de Caja</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8">
+                        <a href="#contacto" class="block w-full py-3.5 rounded-2xl bg-white border border-pink-300 text-pink-600 font-bold text-xs text-center hover:bg-pink-50 transition-all">Elegir Plan Inicial</a>
+                    </div>
+                </div>
+
+                <!-- Plan 2: Pro PyME (Highlighted) -->
+                <div class="pastel-card rounded-3xl p-8 flex flex-col justify-between border-2 border-pink-400 bg-pink-50/50 relative shadow-xl">
+                    <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 rose-gold-gradient text-white text-[10px] font-extrabold uppercase px-4 py-1 rounded-full shadow-md">Más Recomendado</span>
+
+                    <div>
+                        <span class="text-xs font-bold text-purple-600 uppercase tracking-widest">Plan Pro PyME</span>
+                        <h3 class="text-2xl font-serif font-bold text-slate-800 mt-1">Crecimiento & Gestión</h3>
+                        <p class="text-slate-500 text-xs mt-2">Acompañamiento integral para escalar procesos y ventas.</p>
+
+                        <div class="my-6">
+                            <span class="price-amount text-5xl font-extrabold text-slate-800 font-serif" data-monthly="580" data-annual="464">$580</span>
+                            <span class="text-slate-500 text-sm font-medium">/ mes</span>
+                        </div>
+
+                        <ul class="space-y-3 text-xs font-medium text-slate-700 border-t border-pink-200 pt-6">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-600"></i> Todo lo del Plan Inicial</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-600"></i> Optimización de Procesos (BPM)</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-600"></i> Embudos Comerciales & Ads</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-600"></i> Acompañamiento Continuo por WhatsApp</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-600"></i> Tablero KPI de Ventas en Vivo</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8">
+                        <a href="#contacto" class="block w-full py-4 rounded-2xl rose-gold-gradient text-white font-bold text-xs text-center shadow-md hover:scale-105 transition-all">Elegir Plan Pro PyME</a>
+                    </div>
+                </div>
+
+                <!-- Plan 3: Corporativo -->
+                <div class="pastel-card rounded-3xl p-8 flex flex-col justify-between border border-amber-200">
+                    <div>
+                        <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Plan Corporativo</span>
+                        <h3 class="text-2xl font-serif font-bold text-slate-800 mt-1">Transformación 360°</h3>
+                        <p class="text-slate-500 text-xs mt-2">Para empresas que requieren consultoría intensiva y capacitaciones.</p>
+
+                        <div class="my-6">
+                            <span class="price-amount text-4xl font-extrabold text-slate-800 font-serif" data-monthly="1100" data-annual="880">$1,100</span>
+                            <span class="text-slate-500 text-sm font-medium">/ mes</span>
+                        </div>
+
+                        <ul class="space-y-3 text-xs font-medium text-slate-600 border-t border-amber-100 pt-6">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-500"></i> Todo lo del Plan Pro PyME</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-500"></i> Capacitación In-Company de Personal</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-500"></i> Auditoría Financiera Semestral</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-500"></i> Consultor Senior Asignado Exclusivo</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-8">
+                        <a href="#contacto" class="block w-full py-3.5 rounded-2xl bg-white border border-amber-300 text-amber-700 font-bold text-xs text-center hover:bg-amber-50 transition-all">Contactar para Plan Corporativo</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Appointment & Contact Form Section -->
+    <section id="contacto" class="py-24 relative bg-gradient-to-b from-transparent via-pink-50/60 to-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <!-- Direct Contact Info -->
+                <div class="lg:col-span-5 space-y-8">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-pink-600 bg-pink-100 px-3 py-1 rounded-full border border-pink-200">
+                            Reserva Directa
+                        </span>
+                        <h2 class="text-3xl sm:text-4xl font-serif font-extrabold text-slate-800 mt-3">
+                            Agenda tu Asesoría Personalizada
+                        </h2>
+                        <p class="text-slate-600 mt-4 leading-relaxed text-sm">
+                            Selecciona la fecha ideal en nuestro calendario interactivo y completa tus datos para confirmar tu diagnóstico inicial sin compromiso.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="pastel-card p-4 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="mail" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Correo Oficial</span>
+                                <span class="text-slate-800 font-bold text-sm">contacto@alesvconsultores.com</span>
+                            </div>
+                        </div>
+
+                        <div class="pastel-card p-4 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="phone" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-400 block font-bold uppercase">WhatsApp B2B</span>
+                                <span class="text-slate-800 font-bold text-sm">+503 7000-0000 Directo</span>
+                            </div>
+                        </div>
+
+                        <div class="pastel-card p-4 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="clock" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Horario de Sesiones</span>
+                                <span class="text-slate-800 font-bold text-sm">Lun - Vie: 8:00 AM - 6:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Form & Interactive Calendar Picker -->
+                <div class="lg:col-span-7">
+                    <div class="pastel-card p-8 sm:p-10 rounded-3xl border-2 border-white shadow-xl relative bg-white">
+                        
+                        <form id="appointment-form" class="space-y-6">
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-2">Tu Nombre *</label>
+                                    <input type="text" required placeholder="Ej. María Ramos" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-pink-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-2">Tu Empresa / Marca *</label>
+                                    <input type="text" required placeholder="Ej. Boutique Florencia" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-pink-400">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-2">Correo Corporativo *</label>
+                                    <input type="email" required placeholder="maria@boutique.com" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-pink-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-2">Teléfono / WhatsApp *</label>
+                                    <input type="tel" required placeholder="+503 7000 0000" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-pink-400">
+                                </div>
+                            </div>
+
+                            <!-- Interactive Date & Time Picker -->
+                            <div class="p-4 bg-pink-50/50 rounded-2xl border border-pink-200 space-y-3">
+                                <label class="block text-xs font-bold uppercase text-pink-700">Selecciona Día de la Cita *</label>
+                                <div class="grid grid-cols-5 gap-2 text-center" id="calendar-days">
+                                    <!-- Days populated dynamically by JS -->
+                                </div>
+
+                                <div class="pt-2">
+                                    <label class="block text-xs font-bold uppercase text-purple-700 mb-1">Hora Preferida:</label>
+                                    <div class="grid grid-cols-3 gap-2" id="time-slots">
+                                        <button type="button" class="time-slot-btn py-2 bg-white rounded-xl text-xs font-bold border border-slate-200 text-slate-700 hover:border-pink-400 active">09:00 AM</button>
+                                        <button type="button" class="time-slot-btn py-2 bg-white rounded-xl text-xs font-bold border border-slate-200 text-slate-700 hover:border-pink-400">02:00 PM</button>
+                                        <button type="button" class="time-slot-btn py-2 bg-white rounded-xl text-xs font-bold border border-slate-200 text-slate-700 hover:border-pink-400">04:30 PM</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-2">Servicio Requerido Principal</label>
+                                <select class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-pink-400">
+                                    <option>Consultoría Comercial & Marketing Digital</option>
+                                    <option>Consultoría Administrativa</option>
+                                    <option>Planificación Estratégica</option>
+                                    <option>Gestión y Mejora de Procesos</option>
+                                    <option>Asesoría Financiera</option>
+                                    <option>Capacitación Empresarial</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="w-full py-4 rounded-2xl rose-gold-gradient text-white font-bold text-sm shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i> Confirmar Reserva de Asesoría
+                            </button>
+                        </form>
+
+                        <!-- Animated Success Modal Overlay -->
+                        <div id="booking-success" class="hidden absolute inset-0 bg-white/95 rounded-3xl p-8 flex flex-col items-center justify-center text-center space-y-4 border border-pink-200">
+                            <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center">
+                                <i data-lucide="heart-handshake" class="w-10 h-10"></i>
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-800">¡Cita Reservada con Éxito!</h3>
+                            <p class="text-slate-600 text-xs sm:text-sm max-w-md">
+                                Gracias por confiar en <strong class="text-pink-600">ALES.V Consultores</strong>. Te hemos enviado un correo de confirmación con el enlace de reunión.
+                            </p>
+                            <button id="close-success-btn" class="px-6 py-2.5 bg-slate-800 text-white text-xs font-bold rounded-2xl hover:bg-slate-700">
+                                Entendido
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Live Presentation Modal -->
+    <div id="presentation-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="pastel-card bg-white w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-pink-200 relative flex flex-col max-h-[90vh]">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-pink-100 flex items-center justify-between bg-gradient-to-r from-pink-50 to-purple-50">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-pink-400"></span>
+                    <h3 class="font-serif font-bold text-slate-800 text-lg">Presentación Interactiva ALES.V</h3>
+                </div>
+                <button id="close-modal-btn" class="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-pink-100">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Slide Area -->
+            <div class="p-8 overflow-y-auto flex-1 text-center space-y-6">
+                
+                <!-- Slide 1 with Unsplash Image -->
+                <div id="slide-1" class="slide-item space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-widest text-pink-600 bg-pink-100 px-3 py-1 rounded-full">Diapositiva 1 de 3</span>
+                    <h2 class="text-3xl font-serif font-bold text-slate-800">El Desafío de la PyME Actual</h2>
+                    <p class="text-slate-600 text-sm max-w-xl mx-auto leading-relaxed">
+                        Muchas empresas operan sin estructura financiera ni procesos definidos. Ven la consultoría como un gasto inaccesible en lugar de una herramienta de crecimiento.
+                    </p>
+                    <div class="relative max-w-md mx-auto h-48 rounded-2xl overflow-hidden border border-pink-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80" 
+                             alt="Desafío Empresarial PyME" 
+                             class="w-full h-full object-cover"
+                             onerror="this.src='https://placehold.co/600x300/fce7f3/db2777?text=Diagnostico'"/>
+                    </div>
+                </div>
+
+                <!-- Slide 2 with Unsplash Image -->
+                <div id="slide-2" class="slide-item hidden space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-widest text-purple-600 bg-purple-100 px-3 py-1 rounded-full">Diapositiva 2 de 3</span>
+                    <h2 class="text-3xl font-serif font-bold text-slate-800">La Solución Integrada ALES.V</h2>
+                    <p class="text-slate-600 text-sm max-w-xl mx-auto leading-relaxed">
+                        Unificamos la optimización de procesos internos con estrategias avanzadas de marketing digital y finanzas claras.
+                    </p>
+                    <div class="relative max-w-md mx-auto h-48 rounded-2xl overflow-hidden border border-purple-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" 
+                             alt="Estrategia ALES.V" 
+                             class="w-full h-full object-cover"
+                             onerror="this.src='https://placehold.co/600x300/ede9fe/8b5cf6?text=Solucion'"/>
+                    </div>
+                </div>
+
+                <!-- Slide 3 with Unsplash Image -->
+                <div id="slide-3" class="slide-item hidden space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">Diapositiva 3 de 3</span>
+                    <h2 class="text-3xl font-serif font-bold text-slate-800">Tu Siguiente Paso Inteligente</h2>
+                    <p class="text-slate-600 text-sm max-w-xl mx-auto leading-relaxed">
+                        Agenda una primera sesión diagnóstica y descubre el potencial de crecimiento ordenado para tu marca.
+                    </p>
+                    <a href="#contacto" id="slide-cta-btn" class="inline-block px-8 py-3.5 rounded-2xl rose-gold-gradient text-white font-bold text-sm shadow-md hover:scale-105 transition-transform">
+                        Reservar Mi Diagnóstico
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Slide Navigation Buttons -->
+            <div class="p-4 border-t border-pink-100 bg-slate-50 flex items-center justify-between">
+                <button id="prev-slide" class="px-4 py-2 bg-white rounded-xl text-xs font-bold border border-slate-200 text-slate-600 hover:bg-slate-100">Anterior</button>
+                <div class="flex gap-1.5" id="slide-dots">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pink-500"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+                </div>
+                <button id="next-slide" class="px-4 py-2 rose-gold-gradient text-white rounded-xl text-xs font-bold">Siguiente</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white pt-16 pb-12 border-t border-pink-900/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-slate-800">
+                <div class="space-y-3">
+                    <span class="font-serif font-extrabold text-2xl rose-gold-text">ALES.V</span>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Consultoría de Gestión & Marketing Digital con enfoque femenino, empático y orientado a resultados B2B.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-pink-300 mb-3">Secciones</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="#inicio" class="hover:text-white">Inicio</a></li>
+                        <li><a href="#nosotros" class="hover:text-white">Quiénes Somos</a></li>
+                        <li><a href="#servicios" class="hover:text-white">Servicios</a></li>
+                        <li><a href="#calculadora" class="hover:text-white">Calculadora ROI</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-pink-300 mb-3">Especialidades</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li>Consultoría Administrativa</li>
+                        <li>Planificación Estratégica</li>
+                        <li>Gestión y Mejora de Procesos</li>
+                        <li>Asesoría Financiera</li>
+                        <li>Marketing Digital B2B</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-pink-300 mb-3">Contacto B2B</h4>
+                    <p class="text-xs text-slate-400">contacto@alesvconsultores.com</p>
+                    <p class="text-xs text-slate-400 mt-1">+503 7000-0000</p>
+                </div>
+            </div>
+            <div class="pt-8 text-center text-xs text-slate-500">
+                &copy; 2026 ALES.V Consultores. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- All Native Interactive Scripts -->
+    <script>
+        // Lucide Icons Initialization
+        lucide.createIcons();
+
+        // 1. Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if(mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            document.querySelectorAll('.mobile-link').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+        }
+
+        // 2. Enhanced Three.js 3D Panoramic Logo with Dynamic Particles
+        (function init3DLogo() {
+            const canvas = document.getElementById('logo-3d-canvas');
+            if(!canvas) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+            camera.position.z = 3.2;
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(48, 48);
+
+            // Prism Core Geometry
+            const geometry = new THREE.IcosahedronGeometry(1.1, 0);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0xF472B6,
+                roughness: 0.15,
+                metalness: 0.85,
+                wireframe: true
+            });
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            // Ambient Rose Gold Particles
+            const particleCount = 20;
+            const particleGeo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            for(let i=0; i<particleCount*3; i+=3) {
+                positions[i] = (Math.random() - 0.5) * 4;
+                positions[i+1] = (Math.random() - 0.5) * 4;
+                positions[i+2] = (Math.random() - 0.5) * 4;
+            }
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const particleMat = new THREE.PointsMaterial({ color: 0xE0A96D, size: 0.08 });
+            const particles = new THREE.Points(particleGeo, particleMat);
+            scene.add(particles);
+
+            const light1 = new THREE.DirectionalLight(0xffffff, 1.2);
+            light1.position.set(2, 2, 3);
+            scene.add(light1);
+
+            const light2 = new THREE.AmbientLight(0xE0A96D, 0.9);
+            scene.add(light2);
+
+            let isDragging = false;
+            let prevMouseX = 0;
+
+            canvas.addEventListener('mousedown', (e) => { isDragging = true; prevMouseX = e.clientX; });
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            window.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const deltaX = e.clientX - prevMouseX;
+                    mesh.rotation.y += deltaX * 0.025;
+                    prevMouseX = e.clientX;
+                }
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if(!isDragging) {
+                    mesh.rotation.y += 0.012;
+                    mesh.rotation.x += 0.006;
+                    particles.rotation.y += 0.003;
+                }
+                renderer.render(scene, camera);
+            }
+            animate();
+        })();
+
+        // 3. Expandable Service Cards Logic
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const details = card.querySelector('.service-details');
+                const arrow = card.querySelector('.icon-arrow');
+                const toggleText = card.querySelector('.toggle-text');
+
+                const isHidden = details.classList.contains('hidden');
+
+                // Close other open service cards
+                document.querySelectorAll('.service-details').forEach(d => d.classList.add('hidden'));
+                document.querySelectorAll('.icon-arrow').forEach(a => a.style.transform = 'rotate(0deg)');
+                document.querySelectorAll('.toggle-text').forEach(t => t.textContent = 'Ver detalles de la consultoría');
+
+                if (isHidden) {
+                    details.classList.remove('hidden');
+                    if(arrow) arrow.style.transform = 'rotate(180deg)';
+                    if(toggleText) toggleText.textContent = 'Ocultar detalles';
+                }
+            });
+        });
+
+        // 4. Tabbed Presentation Logic (Por Qué Elegir ALES.V)
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.add('hidden'));
+
+                btn.classList.add('active');
+                const targetId = btn.getAttribute('data-tab');
+                const targetContent = document.getElementById(targetId);
+                if(targetContent) targetContent.classList.remove('hidden');
+            });
+        });
+
+        // 5. Fully Functional Interactive ROI Calculator Logic
+        const salesInput = document.getElementById('calc-sales');
+        const teamInput = document.getElementById('calc-team');
+        const focusInput = document.getElementById('calc-focus');
+
+        const salesText = document.getElementById('calc-sales-text');
+        const teamText = document.getElementById('calc-team-text');
+        const calcResult = document.getElementById('calc-result');
+        const calcHours = document.getElementById('calc-hours');
+        const calcRoi = document.getElementById('calc-roi');
+
+        function updateCalculator() {
+            if(!salesInput || !teamInput || !focusInput) return;
+            const sales = parseFloat(salesInput.value);
+            const team = parseInt(teamInput.value);
+            const focusMultiplier = parseFloat(focusInput.value);
+
+            if(salesText) salesText.textContent = `$${sales.toLocaleString()}`;
+            if(teamText) teamText.textContent = `${team} Personas`;
+
+            const annualGain = Math.round((sales * 12) * (focusMultiplier - 1));
+            const hoursSaved = Math.round(team * 6);
+            const roiVal = (focusMultiplier * 2.9).toFixed(1);
+
+            if(calcResult) calcResult.textContent = `$${annualGain.toLocaleString()}`;
+            if(calcHours) calcHours.textContent = `${hoursSaved} Horas`;
+            if(calcRoi) calcRoi.textContent = `${roiVal}x ROI`;
+        }
+
+        if(salesInput) salesInput.addEventListener('input', updateCalculator);
+        if(teamInput) teamInput.addEventListener('input', updateCalculator);
+        if(focusInput) focusInput.addEventListener('change', updateCalculator);
+
+        // Initial Calculation Run
+        updateCalculator();
+
+        // 6. Pricing Monthly / Annual Toggle Switch Logic
+        const planSwitch = document.getElementById('plan-switch');
+        const switchDot = document.getElementById('switch-dot');
+        const priceAmounts = document.querySelectorAll('.price-amount');
+        const labelMonthly = document.getElementById('label-monthly');
+        const labelAnnual = document.getElementById('label-annual');
+        let isAnnualPlan = false;
+
+        if(planSwitch) {
+            planSwitch.addEventListener('click', () => {
+                isAnnualPlan = !isAnnualPlan;
+                if (isAnnualPlan) {
+                    if(switchDot) switchDot.classList.add('translate-x-7');
+                    if(labelMonthly) { labelMonthly.classList.remove('text-slate-800'); labelMonthly.classList.add('text-slate-500'); }
+                    if(labelAnnual) { labelAnnual.classList.remove('text-slate-500'); labelAnnual.classList.add('text-slate-800'); }
+
+                    priceAmounts.forEach(el => {
+                        el.textContent = `$${el.getAttribute('data-annual')}`;
+                    });
+                } else {
+                    if(switchDot) switchDot.classList.remove('translate-x-7');
+                    if(labelAnnual) { labelAnnual.classList.remove('text-slate-800'); labelAnnual.classList.add('text-slate-500'); }
+                    if(labelMonthly) { labelMonthly.classList.remove('text-slate-500'); labelMonthly.classList.add('text-slate-800'); }
+
+                    priceAmounts.forEach(el => {
+                        el.textContent = `$${el.getAttribute('data-monthly')}`;
+                    });
+                }
+            });
+        }
+
+        // 7. Dynamic Interactive Calendar Date Picker Population
+        (function populateCalendar() {
+            const daysContainer = document.getElementById('calendar-days');
+            if(!daysContainer) return;
+
+            const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'];
+            days.forEach((day, index) => {
+                const dayNum = 15 + index;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `p-2 rounded-xl border text-xs font-bold transition-all ${index === 0 ? 'bg-pink-500 text-white border-pink-500 shadow-sm' : 'bg-white border-slate-200 text-slate-700 hover:border-pink-300'}`;
+                btn.innerHTML = `<span class="block text-[10px] opacity-80 uppercase">${day}</span>${dayNum}`;
+                
+                btn.addEventListener('click', () => {
+                    daysContainer.querySelectorAll('button').forEach(b => {
+                        b.className = 'p-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-bold hover:border-pink-300';
+                    });
+                    btn.className = 'p-2 rounded-xl border border-pink-500 bg-pink-500 text-white text-xs font-bold shadow-sm';
+                });
+
+                daysContainer.appendChild(btn);
+            });
+        })();
+
+        // Time Slot Selection logic
+        document.querySelectorAll('.time-slot-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.time-slot-btn').forEach(b => {
+                    b.classList.remove('bg-purple-600', 'text-white', 'border-purple-600');
+                    b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+                });
+                btn.classList.add('bg-purple-600', 'text-white', 'border-purple-600');
+            });
+        });
+
+        // Appointment Booking Form Submission
+        const apptForm = document.getElementById('appointment-form');
+        const bookingSuccess = document.getElementById('booking-success');
+        const closeSuccessBtn = document.getElementById('close-success-btn');
+
+        if(apptForm) {
+            apptForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if(bookingSuccess) bookingSuccess.classList.remove('hidden');
+            });
+        }
+
+        if(closeSuccessBtn) {
+            closeSuccessBtn.addEventListener('click', () => {
+                if(bookingSuccess) bookingSuccess.classList.add('hidden');
+                if(apptForm) apptForm.reset();
+            });
+        }
+
+        // 8. Presentation Slider Modal Logic with Smooth Slide Indicator
+        const modal = document.getElementById('presentation-modal');
+        const openModalBtns = [
+            document.getElementById('open-presentation-btn'),
+            document.getElementById('open-presentation-mobile'),
+            document.getElementById('hero-presentation-btn')
+        ];
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const prevSlideBtn = document.getElementById('prev-slide');
+        const nextSlideBtn = document.getElementById('next-slide');
+        const slides = [
+            document.getElementById('slide-1'),
+            document.getElementById('slide-2'),
+            document.getElementById('slide-3')
+        ];
+        const slideDots = document.getElementById('slide-dots');
+        let currentSlide = 0;
+
+        function updateSlideDots(index) {
+            if(!slideDots) return;
+            const dots = slideDots.querySelectorAll('span');
+            dots.forEach((dot, i) => {
+                if(i === index) {
+                    dot.className = 'w-2.5 h-2.5 rounded-full bg-pink-500';
+                } else {
+                    dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
+                }
+            });
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                if(slide) {
+                    if (i === index) {
+                        slide.classList.remove('hidden');
+                    } else {
+                        slide.classList.add('hidden');
+                    }
+                }
+            });
+            currentSlide = index;
+            updateSlideDots(index);
+        }
+
+        openModalBtns.forEach(btn => {
+            if(btn) {
+                btn.addEventListener('click', () => {
+                    if(modal) modal.classList.remove('hidden');
+                    showSlide(0);
+                });
+            }
+        });
+
+        if(closeModalBtn && modal) {
+            closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+        }
+
+        if(prevSlideBtn) {
+            prevSlideBtn.addEventListener('click', () => {
+                if (currentSlide > 0) showSlide(currentSlide - 1);
+            });
+        }
+
+        if(nextSlideBtn) {
+            nextSlideBtn.addEventListener('click', () => {
+                if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
+            });
+        }
+
+        const slideCtaBtn = document.getElementById('slide-cta-btn');
+        if(slideCtaBtn && modal) {
+            slideCtaBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        }
+    </script>
+</body>
+</html>
